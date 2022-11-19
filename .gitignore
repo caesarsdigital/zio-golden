@@ -1,7 +1,16 @@
-*.class
-*.log
-
-# Metals specific
-.metals
-.bloop
-metals.sbt
+target/
+.idea/
+*.jar
+*.tar.gz
+*.iml
+*.DS_Store
+project/hydra.sbt
+.bsp/
+.metals/
+.bloop/
+.vscode/
+.history/
+full-stack/
+nohup.out
+project/metals.sbt
+project/project
