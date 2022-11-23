@@ -1,10 +1,10 @@
-package com.whbettingengine.zio.golden
+package com.caesars.digital.zio.golden
 
-import zio._
-import zio.nio.file._
-import zio.test._
+import zio.*
+import zio.nio.file.*
+import zio.test.*
 
-import com.whbettingengine.zio.golden.SampleRepository
+import com.caesars.digital.zio.golden.SampleRepository
 
 object FileSampleRepositorySpec extends ZIOSpecDefault {
 
@@ -31,7 +31,7 @@ object FileSampleRepositorySpec extends ZIOSpecDefault {
             ids2 <- SampleRepository.readAllIds[Path, String, Test2]
             _    <- SampleRepository.removeAll[Path, String, Test1]
             _    <- SampleRepository.removeAll[Path, String, Test2]
-          } yield assertTrue(ids1.length == strings.size) && assertTrue (ids2.length == strings.size)
+          } yield assertTrue(ids1.length == strings.size) && assertTrue(ids2.length == strings.size)
         }
       }
     ).provide(FileSampleRepository.live) @@ TestAspect.sequential @@ TestAspect.samples(10)

@@ -1,18 +1,21 @@
-package com.whbettingengine.zio.golden.circe
+package com.caesars.digital.zio.golden.circe
 
-import io.circe._
+import scala.annotation.nowarn
+
+import io.circe.*
 import io.circe.generic.semiauto.deriveCodec
-import zio.nio.file._
-import zio.test._
+import zio.nio.file.*
+import zio.test.*
 import zio.test.magnolia.DeriveGen
 
-import com.whbettingengine.zio.golden.SampleRepository
+import com.caesars.digital.zio.golden.SampleRepository
 
 object CirceSpec extends ZIOSpecDefault {
 
   case class Test(id: Int, name: String, value: Float)
 
   object Test {
+    @nowarn
     implicit val codec = deriveCodec[Test]
   }
 

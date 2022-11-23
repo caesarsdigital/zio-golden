@@ -1,13 +1,13 @@
-package com.whbettingengine.zio.golden
+package com.caesars.digital.zio.golden
 
 import java.security.MessageDigest
 import java.util.Base64
 import scala.reflect.runtime.universe.TypeTag
 
-import zio._
-import zio.nio.file._
+import zio.*
+import zio.nio.file.*
 
-import com.whbettingengine.zio.golden.Reflection
+import com.caesars.digital.zio.golden.Reflection
 
 final case class FileSampleRepository() extends SampleRepository[Path, String] {
   private def sampleHash(s: String): String = {

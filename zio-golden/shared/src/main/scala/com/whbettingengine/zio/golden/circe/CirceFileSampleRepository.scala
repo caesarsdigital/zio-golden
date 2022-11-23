@@ -1,13 +1,13 @@
-package com.whbettingengine.zio.golden.circe
+package com.caesars.digital.zio.golden.circe
 
 import scala.reflect.runtime.universe.TypeTag
 
-import io.circe._
+import io.circe.*
 import io.circe.parser.parse
-import zio._
-import zio.nio.file._
+import zio.*
+import zio.nio.file.*
 
-import com.whbettingengine.zio.golden.{FileSampleRepository, SampleRepository}
+import com.caesars.digital.zio.golden.{FileSampleRepository, SampleRepository}
 
 final case class CirceFileSampleRepository() extends SampleRepository[Path, Json] {
   val repository = FileSampleRepository()

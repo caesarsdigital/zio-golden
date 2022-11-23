@@ -1,9 +1,8 @@
-package com.whbettingengine.zio.golden
+package com.caesars.digital.zio.golden
 
-import scala.annotation.nowarn
 import scala.reflect.runtime.universe.TypeTag
 
-import zio._
+import zio.*
 
 trait SampleRepository[SampleId, Sample] {
   def write[CaseClass: TypeTag](sample: Sample): Task[SampleId]
@@ -15,7 +14,6 @@ trait SampleRepository[SampleId, Sample] {
   def removeAll[CaseClass: TypeTag]: Task[Unit]
 }
 
-@nowarn("cat=unused-params")
 object SampleRepository {
   final def write[I: Tag, S: Tag, C: TypeTag](sample: S): RIO[SampleRepository[I, S], I] =
     ZIO.serviceWithZIO[SampleRepository[I, S]](_.write[C](sample))

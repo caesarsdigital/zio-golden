@@ -1,4 +1,4 @@
-package com.whbettingengine.zio.golden
+package com.caesars.digital.zio.golden
 
 trait Codec[C, S] {
   def encode(x: C): S

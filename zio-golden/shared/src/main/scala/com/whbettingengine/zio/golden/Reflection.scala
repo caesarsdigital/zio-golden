@@ -1,4 +1,4 @@
-package com.whbettingengine.zio.golden
+package com.caesars.digital.zio.golden
 
 import scala.reflect.runtime.universe.{Symbol, Type, TypeTag}
 

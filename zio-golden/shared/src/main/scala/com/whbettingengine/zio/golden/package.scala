@@ -1,13 +1,12 @@
-package com.whbettingengine.zio
+package com.caesars.digital.zio
 
-import scala.annotation.nowarn
 import scala.reflect.runtime.universe.TypeTag
 
-import zio._
-import zio.test.Assertion._
-import zio.test._
+import zio.*
+import zio.test.Assertion.*
+import zio.test.*
 
-import com.whbettingengine.zio.golden.Reflection._
+import com.caesars.digital.zio.golden.Reflection.*
 
 package object golden {
   def testAll[I: Tag, S: Tag, C: TypeTag](gen: Gen[Sized, C], sampleSize: Int = 20)(implicit
@@ -36,7 +35,6 @@ package object golden {
       }
     }
 
-  @nowarn("cat=unused-params")
   private def testOneSample[I: Tag, S: Tag, C: TypeTag](
       sampleId: I
   )(implicit codec: Codec[C, S]): ZIO[SampleRepository[I, S], Throwable, TestResult] = {

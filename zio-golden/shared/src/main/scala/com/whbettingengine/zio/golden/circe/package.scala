@@ -1,13 +1,13 @@
-package com.whbettingengine.zio.golden
+package com.caesars.digital.zio.golden
 
 import scala.reflect.runtime.universe.TypeTag
 
 import io.circe.Json
 import zio.nio.file.Path
-import zio.test._
+import zio.test.*
 
-import com.whbettingengine.zio._
-import com.whbettingengine.zio.golden._
+import com.caesars.digital.zio.*
+import com.caesars.digital.zio.golden.*
 
 package object circe {
   implicit def deriveGoldenCodec[C](implicit codec: io.circe.Codec[C]): Codec[C, Json] = new Codec[C, Json] {

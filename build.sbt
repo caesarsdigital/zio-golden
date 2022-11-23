@@ -1,30 +1,103 @@
+import BuildHelper._
 
-ThisBuild / scalaVersion := "2.13.10"
-ThisBuild / version := "0.0.1-SNAPSHOT"
-ThisBuild / organization := "com.caesars"
-ThisBuild / organizationName := "Caesars Digital"
+inThisBuild(
+  List(
+    organization := "com.caesars",
+    organizationName := "Caesars Digital",
+    licenses := List(
+      "MPL-2.0" -> url("https://www.mozilla.org/en-US/MPL/2.0/")
+    ),
+    developers := List(
+      Developer(
+        "alex.kooper",
+        "Alex Kuprienko",
+        "alex.kooper@gmail.com",
+        url("https://")
+      )
+    )
+  )
+)
 
-val zioVersion = "2.0.3"
+addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
+addCommandAlias("fix", "; all compile:scalafix test:scalafix; all scalafmtSbt scalafmtAll")
+addCommandAlias("check", "; scalafmtSbtCheck; scalafmtCheckAll; compile:scalafix --check; test:scalafix --check")
+
+addCommandAlias(
+  "testJVM",
+  ";zioGoldenJVM/test"
+)
+addCommandAlias(
+  "testJS",
+  ";zioGoldenJS/test"
+)
+addCommandAlias(
+  "testNative",
+  ";zioGoldenNative/test:compile"
+)
+
+val zioVersion   = "2.0.3"
 val circeVersion = "0.14.3"
 
-lazy val root = (project in file("./zio-golden"))
+lazy val root = project
+  .in(file("."))
   .settings(
-    name := "zio-golden",
-
-    libraryDependencies +="org.scala-lang" % "scala-reflect" % scalaVersion.value,
-
-    libraryDependencies += "dev.zio" %% "zio" % zioVersion,
-    libraryDependencies += "dev.zio" %% "zio-test" % zioVersion,
-    libraryDependencies += "dev.zio" %% "zio-test-sbt" % zioVersion,
-    libraryDependencies += "dev.zio" %% "zio-test-magnolia" % zioVersion,
-
-    libraryDependencies += "dev.zio" %% "zio-nio" % "2.0.0",
-    
-    libraryDependencies += "io.circe" %% "circe-core" % circeVersion,
-    libraryDependencies += "io.circe" %% "circe-generic" % circeVersion,
-    libraryDependencies += "io.circe" %% "circe-parser" % circeVersion,
-
-    testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")    
+    publish / skip := true,
+    unusedCompileDependenciesFilter -= moduleFilter("org.scala-js", "scalajs-library")
   )
-  
+  .aggregate(
+    zioGoldenJVM
+    // zioGoldenJS,
+    // zioGoldenNative,
+    // docs
+  )
 
+lazy val zioGolden = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+  .in(file("zio-golden"))
+  .settings(stdSettings("zio-golden"))
+  .settings(crossProjectSettings)
+  .settings(buildInfoSettings("zio.golden"))
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-reflect"     % scalaVersion.value,
+      "dev.zio"       %% "zio"               % zioVersion,
+      "dev.zio"       %% "zio-test"          % zioVersion,
+      "dev.zio"       %% "zio-test-sbt"      % zioVersion % Test,
+      "dev.zio"       %% "zio-nio"           % "2.0.0",
+      "io.circe"      %% "circe-core"        % circeVersion,
+      "io.circe"      %% "circe-generic"     % circeVersion,
+      "io.circe"      %% "circe-parser"      % circeVersion,
+      "dev.zio"       %% "zio-test-magnolia" % zioVersion % Test,
+    )
+  )
+  .settings(testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"))
+  .enablePlugins(BuildInfoPlugin)
+
+lazy val zioGoldenJS = zioGolden.js
+  .settings(jsSettings)
+  .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
+  .settings(scalaJSUseMainModuleInitializer := true)
+
+lazy val zioGoldenJVM = zioGolden.jvm
+  .settings(dottySettings)
+  .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
+  .settings(scalaReflectTestSettings)
+
+lazy val zioGoldenNative = zioGolden.native
+  .settings(nativeSettings)
+
+lazy val docs = project
+  .in(file("zio-golden-docs"))
+  .settings(stdSettings("zio-golden"))
+  .settings(
+    publish / skip := true,
+    moduleName     := "zio-golden-docs",
+    scalacOptions -= "-Yno-imports",
+    scalacOptions -= "-Xfatal-warnings",
+    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(zioGoldenJVM),
+    ScalaUnidoc / unidoc / target              := (LocalRootProject / baseDirectory).value / "website" / "static" / "api",
+    cleanFiles += (ScalaUnidoc / unidoc / target).value,
+    docusaurusCreateSite     := docusaurusCreateSite.dependsOn(Compile / unidoc).value,
+    docusaurusPublishGhpages := docusaurusPublishGhpages.dependsOn(Compile / unidoc).value
+  )
+  .dependsOn(zioGoldenJVM)
+  .enablePlugins(MdocPlugin, DocusaurusPlugin, ScalaUnidocPlugin)
