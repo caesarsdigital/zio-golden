@@ -51,7 +51,7 @@ lazy val root = project
     // docs
   )
 
-lazy val zioGolden = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+lazy val zioGolden = crossProject(JVMPlatform)
   .in(file("zio-golden"))
   .settings(stdSettings("zio-golden"))
   .settings(crossProjectSettings)
