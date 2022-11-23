@@ -2,6 +2,7 @@ before_install:
   - sdk update
   - sdk install java 11.0.14-tem
   - sdk use java java 11.0.14-tem
+  - sdk install java java
 install:
   - sbt -v clean
   - sbt -v publishM2
