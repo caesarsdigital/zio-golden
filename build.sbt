@@ -72,32 +72,32 @@ lazy val zioGolden = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"))
   .enablePlugins(BuildInfoPlugin)
 
-lazy val zioGoldenJS = zioGolden.js
-  .settings(jsSettings)
-  .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
-  .settings(scalaJSUseMainModuleInitializer := true)
+// lazy val zioGoldenJS = zioGolden.js
+//   .settings(jsSettings)
+//   .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
+//   .settings(scalaJSUseMainModuleInitializer := true)
 
 lazy val zioGoldenJVM = zioGolden.jvm
   .settings(dottySettings)
   .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
   .settings(scalaReflectTestSettings)
 
-lazy val zioGoldenNative = zioGolden.native
-  .settings(nativeSettings)
+// lazy val zioGoldenNative = zioGolden.native
+//   .settings(nativeSettings)
 
-lazy val docs = project
-  .in(file("zio-golden-docs"))
-  .settings(stdSettings("zio-golden"))
-  .settings(
-    publish / skip := true,
-    moduleName     := "zio-golden-docs",
-    scalacOptions -= "-Yno-imports",
-    scalacOptions -= "-Xfatal-warnings",
-    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(zioGoldenJVM),
-    ScalaUnidoc / unidoc / target              := (LocalRootProject / baseDirectory).value / "website" / "static" / "api",
-    cleanFiles += (ScalaUnidoc / unidoc / target).value,
-    docusaurusCreateSite     := docusaurusCreateSite.dependsOn(Compile / unidoc).value,
-    docusaurusPublishGhpages := docusaurusPublishGhpages.dependsOn(Compile / unidoc).value
-  )
-  .dependsOn(zioGoldenJVM)
-  .enablePlugins(MdocPlugin, DocusaurusPlugin, ScalaUnidocPlugin)
+// lazy val docs = project
+//   .in(file("zio-golden-docs"))
+//   .settings(stdSettings("zio-golden"))
+//   .settings(
+//     publish / skip := true,
+//     moduleName     := "zio-golden-docs",
+//     scalacOptions -= "-Yno-imports",
+//     scalacOptions -= "-Xfatal-warnings",
+//     ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(zioGoldenJVM),
+//     ScalaUnidoc / unidoc / target              := (LocalRootProject / baseDirectory).value / "website" / "static" / "api",
+//     cleanFiles += (ScalaUnidoc / unidoc / target).value,
+//     docusaurusCreateSite     := docusaurusCreateSite.dependsOn(Compile / unidoc).value,
+//     docusaurusPublishGhpages := docusaurusPublishGhpages.dependsOn(Compile / unidoc).value
+//   )
+//   .dependsOn(zioGoldenJVM)
+//   .enablePlugins(MdocPlugin, DocusaurusPlugin, ScalaUnidocPlugin)
