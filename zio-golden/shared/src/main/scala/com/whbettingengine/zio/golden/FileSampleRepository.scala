@@ -41,7 +41,7 @@ final case class FileSampleRepository() extends SampleRepository[Path, String] {
     for {
       _ <- ZIO
         .fail(new RuntimeException("Cannot store an empty sample"))
-        .when(sample.isBlank())
+        .when(sample.isEmpty)
 
       root <- rootPath
       _    <- Files.createDirectories(root / packagePath[T])
