@@ -1,22 +1,21 @@
 package com.caesars.digital.zio.golden
 
-import scala.reflect.runtime.universe.{Symbol, Type, TypeTag}
+import scala.annotation.nowarn
+import zio.Tag
 
 object Reflection {
-  def typeName[A](implicit A: TypeTag[A]): Seq[String] = nameForType(A.tpe)
-
-  def typePackage[A](implicit A: TypeTag[A]): Seq[String] =
-    owners(A.tpe).collectFirst { case s if s.isPackage => s.fullName.split('.').toSeq }.getOrElse(Seq.empty)
-
-  private def owners(tpe: Type): Iterator[Symbol] =
-    Iterator.iterate(tpe.typeSymbol)(_.owner)
-
-  private def baseSymbols(tpe: Type): Seq[Symbol] =
-    owners(tpe).takeWhile(!_.isPackage).toSeq.reverse
-
-  private def nameForType(tpe: Type): Seq[String] = {
-    val baseNames = baseSymbols(tpe).map(_.name.decodedName.toString)
-
-    (baseNames ++ tpe.typeArgs.flatMap(nameForType))
+  @nowarn
+  def typeName[A: Tag]: Seq[String] = {
+    val head +: tail = typeNameParts[A]
+    head.split('.').last +: tail
   }
+
+  def typePackage[A: Tag]: Seq[String] = {
+    val r = typeNameParts[A].head.split('.').toSeq
+    r.take(r.length - 1)
+  }
+
+  private def typeRepr[A](implicit tag: Tag[A]): String = tag.tag.repr
+
+  private def typeNameParts[A: Tag]: Seq[String] = typeRepr[A].split("::").toSeq
 }

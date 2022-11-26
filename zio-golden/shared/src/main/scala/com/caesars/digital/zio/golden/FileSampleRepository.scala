@@ -2,7 +2,6 @@ package com.caesars.digital.zio.golden
 
 import java.security.MessageDigest
 import java.util.Base64
-import scala.reflect.runtime.universe.TypeTag
 
 import zio.*
 import zio.nio.file.*
@@ -26,16 +25,16 @@ final case class FileSampleRepository() extends SampleRepository[Path, String] {
     root = target.parent.getOrElse(target)
   } yield root / "src" / "test" / "resources" / "golden"
 
-  private def packagePath[T: TypeTag]: Path = Reflection.typePackage[T].map(Path(_)).reduce(_ / _)
+  private def packagePath[T: Tag]: Path = Reflection.typePackage[T].map(Path(_)).reduce(_ / _)
 
-  private def fileNamePrefix[T: TypeTag] = Reflection.typeName[T].mkString("_")
+  private def fileNamePrefix[T: Tag] = Reflection.typeName[T].mkString("_")
 
-  private def fileName[T: TypeTag](sample: String): String =
+  private def fileName[T: Tag](sample: String): String =
     s"${fileNamePrefix[T]}_${sampleHash(sample)}.json"
 
-  private def relativeTestPath[T: TypeTag](sample: String): Path = packagePath[T] / fileName[T](sample)
+  private def relativeTestPath[T: Tag](sample: String): Path = packagePath[T] / fileName[T](sample)
 
-  override def write[T: TypeTag](sample: String) = {
+  override def write[T: Tag](sample: String) = {
     val relativePath = relativeTestPath[T](sample)
 
     for {
@@ -54,7 +53,7 @@ final case class FileSampleRepository() extends SampleRepository[Path, String] {
     bytes <- Files.readAllBytes(root / id)
   } yield new String(bytes.toArray)
 
-  override def readAllIds[T: TypeTag]: Task[Seq[Path]] = for {
+  override def readAllIds[T: Tag]: Task[Seq[Path]] = for {
     root <- rootPath
 
     dirExists <- Files.exists(root / packagePath[T])
@@ -67,7 +66,7 @@ final case class FileSampleRepository() extends SampleRepository[Path, String] {
       else ZIO.succeed(Seq.empty)
   } yield ids
 
-  override def removeAll[T: TypeTag]: Task[Unit] =
+  override def removeAll[T: Tag]: Task[Unit] =
     rootPath.flatMap { root =>
       Files
         .newDirectoryStream(root / packagePath[T], s"${fileNamePrefix[T]}*")

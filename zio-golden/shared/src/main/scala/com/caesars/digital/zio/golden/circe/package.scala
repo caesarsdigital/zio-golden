@@ -1,10 +1,9 @@
 package com.caesars.digital.zio.golden
 
-import scala.reflect.runtime.universe.TypeTag
-
 import io.circe.Json
 import zio.nio.file.Path
 import zio.test.*
+import zio.Tag
 
 import com.caesars.digital.zio.*
 import com.caesars.digital.zio.golden.*
@@ -16,7 +15,7 @@ package object circe {
     override def decode(x: Json): Either[Throwable, C] = codec.decodeJson(x)
   }
 
-  def testAll[C: TypeTag](gen: Gen[Sized, C], sampleSize: Int = 20)(implicit
+  def testAll[C: Tag](gen: Gen[Sized, C], sampleSize: Int = 20)(implicit
       codec: Codec[C, Json]
   ): Seq[Spec[TestEnvironment, Throwable]] =
     Seq(
@@ -24,10 +23,10 @@ package object circe {
       testSamples(gen, sampleSize)
     )
 
-  def testSerializability[C: TypeTag](gen: Gen[Sized, C])(implicit codec: Codec[C, Json]): Spec[Sized, Nothing] =
+  def testSerializability[C: Tag](gen: Gen[Sized, C])(implicit codec: Codec[C, Json]): Spec[Sized, Nothing] =
     golden.testSerializability(gen)
 
-  def testSamples[C: TypeTag](gen: Gen[Sized, C], sampleSize: Int = 20)(implicit
+  def testSamples[C: Tag](gen: Gen[Sized, C], sampleSize: Int = 20)(implicit
       codec: Codec[C, Json]
   ): Spec[TestEnvironment, Throwable] =
     golden.testSamples[Path, Json, C](gen, sampleSize).provideCustom(CirceFileSampleRepository.live)

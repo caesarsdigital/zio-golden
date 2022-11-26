@@ -1,7 +1,5 @@
 package com.caesars.digital.zio
 
-import scala.reflect.runtime.universe.TypeTag
-
 import zio.*
 import zio.test.Assertion.*
 import zio.test.*
@@ -9,7 +7,7 @@ import zio.test.*
 import com.caesars.digital.zio.golden.Reflection.*
 
 package object golden {
-  def testAll[I: Tag, S: Tag, C: TypeTag](gen: Gen[Sized, C], sampleSize: Int = 20)(implicit
+  def testAll[I: Tag, S: Tag, C: Tag](gen: Gen[Sized, C], sampleSize: Int = 20)(implicit
       codec: Codec[C, S]
   ): Seq[Spec[SampleRepository[I, S] with Sized, Throwable]] =
     Seq(
@@ -17,13 +15,13 @@ package object golden {
       testSamples[I, S, C](gen, sampleSize)
     )
 
-  def testSerializability[S, C: TypeTag](gen: Gen[Sized, C])(implicit codec: Codec[C, S]): Spec[Sized, Nothing] = {
+  def testSerializability[S, C: Tag](gen: Gen[Sized, C])(implicit codec: Codec[C, S]): Spec[Sized, Nothing] = {
     zio.test.test(s"Test that encode/decode work for the class '${className[C]}'") {
       check(gen)(caseClass => assert(codec.decode(codec.encode(caseClass)))(isRight(equalTo(caseClass))))
     }
   }
 
-  def testSamples[I: Tag, S: Tag, C: TypeTag](gen: Gen[Sized, C], sampleSize: Int = 20)(implicit
+  def testSamples[I: Tag, S: Tag, C: Tag](gen: Gen[Sized, C], sampleSize: Int = 20)(implicit
       codec: Codec[C, S]
   ): Spec[SampleRepository[I, S] with Sized, Throwable] =
     zio.test.test(s"Test that decode/encode work for the saved samples of class '${className[C]}'") {
@@ -35,7 +33,7 @@ package object golden {
       }
     }
 
-  private def testOneSample[I: Tag, S: Tag, C: TypeTag](
+  private def testOneSample[I: Tag, S: Tag, C: Tag](
       sampleId: I
   )(implicit codec: Codec[C, S]): ZIO[SampleRepository[I, S], Throwable, TestResult] = {
     for {
@@ -44,9 +42,9 @@ package object golden {
     } yield assert(codec.encode(caseClass))(equalTo(sample)) ?? s"Assertion faild on $sampleId"
   }.mapError(e => new Exception(s"Exception when processing $sampleId: $e"))
 
-  private def className[C: TypeTag] = typePackage[C].mkString(".") + "." + typeName[C].mkString(".")
+  private def className[C: Tag] = typePackage[C].mkString(".") + "." + typeName[C].mkString(".")
 
-  private def createSamples[I: Tag, S: Tag, C: TypeTag](gen: Gen[Sized, C], sampleSize: Int)(implicit
+  private def createSamples[I: Tag, S: Tag, C: Tag](gen: Gen[Sized, C], sampleSize: Int)(implicit
       codec: Codec[C, S]
   ): RIO[SampleRepository[I, S] & Sized, Unit] = for {
     samples <- Gen
@@ -57,7 +55,7 @@ package object golden {
     _ <- ZIO.foreachParDiscard(samples)(sample => SampleRepository.write[I, S, C](codec.encode(sample)))
   } yield ()
 
-  private def createSamplesIfNecessary[I: Tag, S: Tag, C: TypeTag](gen: Gen[Sized, C], sampleSize: Int)(implicit
+  private def createSamplesIfNecessary[I: Tag, S: Tag, C: Tag](gen: Gen[Sized, C], sampleSize: Int)(implicit
       codec: Codec[C, S]
   ): RIO[SampleRepository[I, S] & Sized, Unit] = for {
     n <- SampleRepository.readAllIds[I, S, C].map(_.length)
