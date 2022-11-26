@@ -1,10 +1,9 @@
 package com.caesars.digital.zio
 
+import com.caesars.digital.zio.golden.Reflection.*
 import zio.*
 import zio.test.Assertion.*
 import zio.test.*
-
-import com.caesars.digital.zio.golden.Reflection.*
 
 package object golden {
   def testAll[I: Tag, S: Tag, C: Tag](gen: Gen[Sized, C], sampleSize: Int = 20)(implicit

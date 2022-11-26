@@ -1,12 +1,11 @@
 package com.caesars.digital.zio.golden
 
-import io.circe.Json
-import zio.nio.file.Path
-import zio.test.*
-import zio.Tag
-
 import com.caesars.digital.zio.*
 import com.caesars.digital.zio.golden.*
+import io.circe.Json
+import zio.Tag
+import zio.nio.file.Path
+import zio.test.*
 
 package object circe {
   implicit def deriveGoldenCodec[C](implicit codec: io.circe.Codec[C]): Codec[C, Json] = new Codec[C, Json] {

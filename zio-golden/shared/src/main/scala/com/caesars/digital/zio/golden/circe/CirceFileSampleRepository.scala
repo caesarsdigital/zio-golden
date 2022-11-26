@@ -1,11 +1,10 @@
 package com.caesars.digital.zio.golden.circe
 
+import com.caesars.digital.zio.golden.{FileSampleRepository, SampleRepository}
 import io.circe.*
 import io.circe.parser.parse
 import zio.*
 import zio.nio.file.*
-
-import com.caesars.digital.zio.golden.{FileSampleRepository, SampleRepository}
 
 final case class CirceFileSampleRepository() extends SampleRepository[Path, Json] {
   val repository = FileSampleRepository()

@@ -3,10 +3,9 @@ package com.caesars.digital.zio.golden
 import java.security.MessageDigest
 import java.util.Base64
 
+import com.caesars.digital.zio.golden.Reflection
 import zio.*
 import zio.nio.file.*
-
-import com.caesars.digital.zio.golden.Reflection
 
 final case class FileSampleRepository() extends SampleRepository[Path, String] {
   private def sampleHash(s: String): String = {

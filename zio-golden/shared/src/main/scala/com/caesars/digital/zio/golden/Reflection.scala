@@ -1,6 +1,7 @@
 package com.caesars.digital.zio.golden
 
 import scala.annotation.nowarn
+
 import zio.Tag
 
 object Reflection {

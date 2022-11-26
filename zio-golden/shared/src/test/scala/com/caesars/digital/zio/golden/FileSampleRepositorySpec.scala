@@ -1,10 +1,9 @@
 package com.caesars.digital.zio.golden
 
+import com.caesars.digital.zio.golden.SampleRepository
 import zio.*
 import zio.nio.file.*
 import zio.test.*
-
-import com.caesars.digital.zio.golden.SampleRepository
 
 object FileSampleRepositorySpec extends ZIOSpecDefault {
 

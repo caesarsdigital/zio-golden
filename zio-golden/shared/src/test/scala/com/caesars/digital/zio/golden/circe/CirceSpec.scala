@@ -2,13 +2,12 @@ package com.caesars.digital.zio.golden.circe
 
 import scala.annotation.nowarn
 
+import com.caesars.digital.zio.golden.SampleRepository
 import io.circe.*
 import io.circe.generic.semiauto.deriveCodec
 import zio.nio.file.*
 import zio.test.*
 import zio.test.magnolia.DeriveGen
-
-import com.caesars.digital.zio.golden.SampleRepository
 
 object CirceSpec extends ZIOSpecDefault {
 
