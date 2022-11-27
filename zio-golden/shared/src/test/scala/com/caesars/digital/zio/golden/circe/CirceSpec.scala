@@ -15,7 +15,7 @@ object CirceSpec extends ZIOSpecDefault {
 
   object Test {
     @nowarn
-    implicit val codec = deriveCodec[Test]
+    implicit val codec: Codec[Test] = deriveCodec[Test]
   }
 
   def removeAllSamples =

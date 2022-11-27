@@ -20,10 +20,8 @@ object BuildHelper {
     val list = yaml.get("jobs").get("test").get("strategy").get("matrix").get("scala").asScala
     list.map(v => (v.split('.').take(2).mkString("."), v)).toMap
   }
-  val Scala211: String   = versions("2.11")
-  val Scala212: String   = versions("2.12")
   val Scala213: String   = versions("2.13")
-  val ScalaDotty: String = versions("3.0")
+  val ScalaDotty: String = versions("3.2")
 
   val SilencerVersion = "1.7.8"
 
@@ -142,7 +140,7 @@ object BuildHelper {
 
   def extraOptions(scalaVersion: String, optimize: Boolean) =
     CrossVersion.partialVersion(scalaVersion) match {
-      case Some((3, 0)) =>
+      case Some((3, 2)) =>
         Seq(
           "-language:implicitConversions",
           "-Xignore-scala2-macros"
@@ -232,7 +230,7 @@ object BuildHelper {
 
   def stdSettings(prjName: String) = Seq(
     name                     := s"$prjName",
-    crossScalaVersions       := Seq(Scala211, Scala212, Scala213),
+    crossScalaVersions       := Seq(Scala213),
     ThisBuild / scalaVersion := Scala213,
     scalacOptions            := stdOptions ++ extraOptions(scalaVersion.value, optimize = !isSnapshot.value),
     libraryDependencies ++= {

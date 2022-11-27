@@ -26,15 +26,6 @@ addCommandAlias(
   "testJVM",
   ";zioGoldenJVM/test"
 )
-addCommandAlias(
-  "testJS",
-  ";zioGoldenJS/test"
-)
-addCommandAlias(
-  "testNative",
-  ";zioGoldenNative/test:compile"
-)
-
 val zioVersion   = "2.0.3"
 val circeVersion = "0.14.3"
 
@@ -46,8 +37,6 @@ lazy val root = project
   )
   .aggregate(
     zioGoldenJVM
-    // zioGoldenJS,
-    // zioGoldenNative,
     // docs
   )
 
@@ -58,32 +47,24 @@ lazy val zioGolden = crossProject(JVMPlatform)
   .settings(buildInfoSettings("zio.golden"))
   .settings(
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect"     % scalaVersion.value,
-      "dev.zio"       %% "zio"               % zioVersion,
-      "dev.zio"       %% "zio-test"          % zioVersion,
-      "dev.zio"       %% "zio-test-sbt"      % zioVersion % Test,
-      "dev.zio"       %% "zio-nio"           % "2.0.0",
-      "io.circe"      %% "circe-core"        % circeVersion,
-      "io.circe"      %% "circe-generic"     % circeVersion,
-      "io.circe"      %% "circe-parser"      % circeVersion,
-      "dev.zio"       %% "zio-test-magnolia" % zioVersion % Test,
+      "dev.zio"  %% "zio"               % zioVersion,
+      "dev.zio"  %% "zio-test"          % zioVersion,
+      "dev.zio"  %% "zio-test-sbt"      % zioVersion % Test,
+      "dev.zio"  %% "zio-nio"           % "2.0.0",
+      "io.circe" %% "circe-core"        % circeVersion,
+      "io.circe" %% "circe-generic"     % circeVersion,
+      "io.circe" %% "circe-parser"      % circeVersion,
+      "dev.zio"  %% "zio-test-magnolia" % zioVersion % Test,
     )
   )
   .settings(testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"))
   .enablePlugins(BuildInfoPlugin)
 
-// lazy val zioGoldenJS = zioGolden.js
-//   .settings(jsSettings)
-//   .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
-//   .settings(scalaJSUseMainModuleInitializer := true)
-
 lazy val zioGoldenJVM = zioGolden.jvm
+  .settings(ThisBuild / scalaVersion := ScalaDotty)
   .settings(dottySettings)
   .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
   .settings(scalaReflectTestSettings)
-
-// lazy val zioGoldenNative = zioGolden.native
-//   .settings(nativeSettings)
 
 // lazy val docs = project
 //   .in(file("zio-golden-docs"))
