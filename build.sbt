@@ -61,7 +61,6 @@ lazy val zioGolden = crossProject(JVMPlatform)
   .enablePlugins(BuildInfoPlugin)
 
 lazy val zioGoldenJVM = zioGolden.jvm
-  .settings(ThisBuild / scalaVersion := ScalaDotty)
   .settings(dottySettings)
   .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
   .settings(scalaReflectTestSettings)

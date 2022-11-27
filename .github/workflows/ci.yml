@@ -28,18 +28,18 @@ jobs:
       - name: Lint code
         run: sbt check
 
-  mdoc:
-    runs-on: ubuntu-20.04
-    timeout-minutes: 60
-    steps:
-      - name: Checkout current branch
-        uses: actions/checkout@v3.0.0
-      - name: Setup Scala and Java
-        uses: olafurpg/setup-scala@v13
-      - name: Cache scala dependencies
-        uses: coursier/cache-action@v6
-      - name: Check Document Generation
-        run: sbt docs/docusaurusCreateSite
+  # mdoc:
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 60
+  #   steps:
+  #     - name: Checkout current branch
+  #       uses: actions/checkout@v3.0.0
+  #     - name: Setup Scala and Java
+  #       uses: olafurpg/setup-scala@v13
+  #     - name: Cache scala dependencies
+  #       uses: coursier/cache-action@v6
+  #     - name: Check Document Generation
+  #       run: sbt docs/docusaurusCreateSite
 
   test:
     runs-on: ubuntu-20.04
@@ -62,10 +62,10 @@ jobs:
       - name: Cache scala dependencies
         uses: coursier/cache-action@v6
       - name: Run tests
-        if: ${{ !startsWith(matrix.scala, '3.0.') }}
+        if: ${{ !startsWith(matrix.scala, '3.2.') }}
         run: sbt ++${{ matrix.scala }}! test${{ matrix.platform }}
       - name: Run dotty tests
-        if: ${{ startsWith(matrix.scala, '3.0.') && matrix.platform == 'JVM' }}
+        if: ${{ startsWith(matrix.scala, '3.2.') && matrix.platform == 'JVM' }}
         run: sbt ++${{ matrix.scala }}! testJVM
 
   ci:
@@ -75,24 +75,24 @@ jobs:
       - name: Aggregate of lint, and all tests
         run: echo "ci passed"
 
-  publish:
-    runs-on: ubuntu-20.04
-    timeout-minutes: 30
-    needs: [ci]
-    if: github.event_name != 'pull_request'
-    steps:
-      - name: Checkout current branch
-        uses: actions/checkout@v3.0.0
-        with:
-          fetch-depth: 0
-      - name: Setup Scala and Java 
-        uses: olafurpg/setup-scala@v13
-      - name: Cache scala dependencies
-        uses: coursier/cache-action@v6
-      - name: Release artifacts
-        run: sbt ci-release
-        env:
-          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
-          PGP_SECRET: ${{ secrets.PGP_SECRET }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+  # publish:
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 30
+  #   needs: [ci]
+  #   if: github.event_name != 'pull_request'
+  #   steps:
+  #     - name: Checkout current branch
+  #       uses: actions/checkout@v3.0.0
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Setup Scala and Java 
+  #       uses: olafurpg/setup-scala@v13
+  #     - name: Cache scala dependencies
+  #       uses: coursier/cache-action@v6
+  #     - name: Release artifacts
+  #       run: sbt ci-release
+  #       env:
+  #         PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+  #         PGP_SECRET: ${{ secrets.PGP_SECRET }}
+  #         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+  #         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
