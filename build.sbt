@@ -26,7 +26,7 @@ addCommandAlias(
   "testJVM",
   ";zioGoldenJVM/test"
 )
-val zioVersion   = "2.0.3"
+val zioVersion   = "2.0.11"
 val circeVersion = "0.14.3"
 
 lazy val root = project
@@ -50,7 +50,7 @@ lazy val zioGolden = crossProject(JVMPlatform)
       "dev.zio"  %% "zio"               % zioVersion,
       "dev.zio"  %% "zio-test"          % zioVersion,
       "dev.zio"  %% "zio-test-sbt"      % zioVersion % Test,
-      "dev.zio"  %% "zio-nio"           % "2.0.0",
+      "dev.zio"  %% "zio-nio"           % "2.0.2",
       "io.circe" %% "circe-core"        % circeVersion,
       "io.circe" %% "circe-generic"     % circeVersion,
       "io.circe" %% "circe-parser"      % circeVersion,
