@@ -1,5 +1,5 @@
-val scala3Version = "3.2.1"
-val zioVersion = "2.0.3"
+val scala3Version = "3.3.3"
+val zioVersion = "2.0.11"
 val circeVersion = "0.14.3"
 
 lazy val root = project

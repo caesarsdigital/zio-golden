@@ -21,7 +21,7 @@ object BuildHelper {
     list.map(v => (v.split('.').take(2).mkString("."), v)).toMap
   }
   val Scala213: String   = versions("2.13")
-  val ScalaDotty: String = versions("3.2")
+  val ScalaDotty: String = versions("3.3")
 
   val SilencerVersion = "1.7.8"
 
@@ -140,7 +140,7 @@ object BuildHelper {
 
   def extraOptions(scalaVersion: String, optimize: Boolean) =
     CrossVersion.partialVersion(scalaVersion) match {
-      case Some((3, 2)) =>
+      case Some((3, 3)) =>
         Seq(
           "-language:implicitConversions",
           "-Xignore-scala2-macros"
