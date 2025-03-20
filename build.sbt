@@ -1,9 +1,10 @@
 inThisBuild(
   List(
-    organization       := "com.caesars",
-    organizationName   := "Caesars Digital",
-    scalaVersion       := "2.13.16",
-    crossScalaVersions := List("2.13.16", "3.3.5"),
+    organization               := "com.caesars",
+    organizationName           := "Caesars Digital",
+    scalaVersion               := "2.13.16",
+    crossScalaVersions         := List("2.13.16", "3.3.5"),
+    githubWorkflowJavaVersions := List(JavaSpec.temurin("17")),
     licenses := List(
       "MPL-2.0" -> url("https://www.mozilla.org/en-US/MPL/2.0/")
     ),
