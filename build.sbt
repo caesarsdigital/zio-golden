@@ -23,10 +23,7 @@ val circeVersion = "0.14.12"
 
 lazy val root = project
   .in(file("."))
-  .settings(
-    publish / skip := true,
-    unusedCompileDependenciesFilter -= moduleFilter("org.scala-js", "scalajs-library")
-  )
+  .settings(publish / skip := true)
   .aggregate(zioGolden)
 
 lazy val zioGolden = project
