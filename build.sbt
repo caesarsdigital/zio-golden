@@ -1,20 +1,12 @@
-import BuildHelper._
-
 inThisBuild(
   List(
-    organization     := "com.caesars",
-    organizationName := "Caesars Digital",
+    organization       := "com.caesars",
+    organizationName   := "Caesars Digital",
+    scalaVersion       := "2.13.16",
+    crossScalaVersions := List("2.13.16", "3.3.5"),
     licenses := List(
       "MPL-2.0" -> url("https://www.mozilla.org/en-US/MPL/2.0/")
     ),
-    developers := List(
-      Developer(
-        "alex.kooper",
-        "Alex Kuprienko",
-        "alex.kooper@gmail.com",
-        url("https://")
-      )
-    )
   )
 )
 
@@ -26,8 +18,8 @@ addCommandAlias(
   "testJVM",
   ";zioGoldenJVM/test"
 )
-val zioVersion   = "2.0.11"
-val circeVersion = "0.14.3"
+val zioVersion   = "2.1.16"
+val circeVersion = "0.14.12"
 
 lazy val root = project
   .in(file("."))
@@ -35,16 +27,10 @@ lazy val root = project
     publish / skip := true,
     unusedCompileDependenciesFilter -= moduleFilter("org.scala-js", "scalajs-library")
   )
-  .aggregate(
-    zioGoldenJVM
-    // docs
-  )
+  .aggregate(zioGolden)
 
-lazy val zioGolden = crossProject(JVMPlatform)
+lazy val zioGolden = project
   .in(file("zio-golden"))
-  .settings(stdSettings("zio-golden"))
-  .settings(crossProjectSettings)
-  .settings(buildInfoSettings("zio.golden"))
   .settings(
     libraryDependencies ++= Seq(
       "dev.zio"  %% "zio"               % zioVersion,
@@ -59,25 +45,3 @@ lazy val zioGolden = crossProject(JVMPlatform)
   )
   .settings(testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"))
   .enablePlugins(BuildInfoPlugin)
-
-lazy val zioGoldenJVM = zioGolden.jvm
-  .settings(dottySettings)
-  .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
-  .settings(scalaReflectTestSettings)
-
-// lazy val docs = project
-//   .in(file("zio-golden-docs"))
-//   .settings(stdSettings("zio-golden"))
-//   .settings(
-//     publish / skip := true,
-//     moduleName     := "zio-golden-docs",
-//     scalacOptions -= "-Yno-imports",
-//     scalacOptions -= "-Xfatal-warnings",
-//     ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(zioGoldenJVM),
-//     ScalaUnidoc / unidoc / target              := (LocalRootProject / baseDirectory).value / "website" / "static" / "api",
-//     cleanFiles += (ScalaUnidoc / unidoc / target).value,
-//     docusaurusCreateSite     := docusaurusCreateSite.dependsOn(Compile / unidoc).value,
-//     docusaurusPublishGhpages := docusaurusPublishGhpages.dependsOn(Compile / unidoc).value
-//   )
-//   .dependsOn(zioGoldenJVM)
-//   .enablePlugins(MdocPlugin, DocusaurusPlugin, ScalaUnidocPlugin)
