@@ -1,5 +1,0 @@
-jdk:
-  - 17.0.12-graal
-install:
-  - sbt +clean
-  - sbt +publishM2
