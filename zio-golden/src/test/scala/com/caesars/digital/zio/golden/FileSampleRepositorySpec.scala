@@ -10,7 +10,7 @@ object FileSampleRepositorySpec extends ZIOSpecDefault {
   case class Test1(s: String)
   case class Test2(s: String)
 
-  override def spec =
+  override def spec: Spec[Any, Throwable] =
     suite("File Sample repository specification")(
       test("Read back the same strings that were written") {
         check(Gen.setOf(Gen.alphaNumericStringBounded(10, 100))) { strings =>

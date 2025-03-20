@@ -21,7 +21,7 @@ object CirceSpec extends ZIOSpecDefault {
   def removeAllSamples =
     SampleRepository.removeAll[Path, Json, Test].provide(CirceFileSampleRepository.live).orDie
 
-  override def spec =
+  override def spec: Spec[TestEnvironment, Throwable] =
     suite("Circe specification")(
       testAll(DeriveGen[Test]),
     ) @@ TestAspect.sequential @@ TestAspect.afterAll(removeAllSamples)
