@@ -23,13 +23,9 @@ val zioVersion   = "2.1.16"
 val circeVersion = "0.14.12"
 
 lazy val root = project
-  .in(file("."))
-  .settings(publish / skip := true)
-  .aggregate(zioGolden)
-
-lazy val zioGolden = project
   .in(file("zio-golden"))
   .settings(
+    name := "zio-golden",
     libraryDependencies ++= Seq(
       "dev.zio"  %% "zio"               % zioVersion,
       "dev.zio"  %% "zio-test"          % zioVersion,
